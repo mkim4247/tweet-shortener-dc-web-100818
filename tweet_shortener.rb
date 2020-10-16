@@ -12,40 +12,37 @@ def dictionary
   "at" => "@",
   "and" => "&"
   }
-end 
-
-def word_substituter(tweet)
-  tweet = tweet.split
-  tweet.collect! do |word|
-    if dictionary.key? ("#{word.downcase}")
-      dictionary[word.downcase]
-    else 
-      word 
-    end 
-  end 
-  tweet.join(" ")
 end
 
-def bulk_tweet_shortener(tweet_array)
-  tweet_array.each do |i|
-    puts word_substituter(i)
-  end 
-end 
+def word_substituter(tweet)
+  tweet.split.collect do |word|
+    if dictionary.keys.include?(word.downcase)
+      word = dictionary[word.downcase]
+    else
+      word
+    end
+  end.join(' ')
+end
+
+def bulk_tweet_shortener(tweets_arr)
+  tweets_arr.each do |tweets|
+    puts word_substituter(tweets)
+  end
+end
 
 def selective_tweet_shortener(tweet)
-  if tweet.length <= 140
-    tweet 
-    elsif tweet.length > 140
-      word_substituter(tweet)
+  if tweet.split(//).count > 140
+    word_substituter(tweet)
+  else
+    tweet
   end
-end 
+end
 
 def shortened_tweet_truncator(tweet)
-  if tweet.length > 140 
+  if selective_tweet_shortener(tweet).split(//).count > 140
+    selective_tweet_shortener(tweet)[0...137] + '...'
+  else
     selective_tweet_shortener(tweet)
-    tweet[0..136] + "..."
-    elsif tweet.length <= 140 
-    tweet 
-  end 
-end 
+  end
+end
 
